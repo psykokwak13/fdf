@@ -76,6 +76,42 @@ v_struct    parsenbr(char *charnbr)
 	valuestruct.z_value = ft_atoi(charnbr);
 	return (valuestruct);
 }
+
+void ligne(int x1, int y1, int x2, int y2, void *win, void *mlx) {
+     int dx = abs(x2 - x1);
+     int dy = abs(y2 - y1);
+     int sx = (x1 < x2) ? 1 : -1;
+     int sy = (y1 < y2) ? 1 : -1;
+     int err = dx - dy;
+
+     while (1) {
+         mlx_pixel_put(mlx, win, x1, y1, 0x3498DB); // Place un pixel
+
+         if (x1 == x2 && y1 == y2)
+             break;
+
+         int e2 = 2 * err;
+
+         if (e2 > -dy) {
+             err -= dy;
+             x1 += sx;
+         }
+         if (e2 < dx) {
+             err += dx;
+             y1 += sy;
+         }
+     }
+ }
+static void iso(int *x, int *y, int z)
+ {
+     int previous_x;
+     int previous_y;
+
+     previous_x = *x;
+     previous_y = *y;
+     *x = (previous_x - previous_y) * cos(0.523599);
+     *y = -z + (previous_x + previous_y) * sin(0.523599);
+ }
 int main ()
 {
 	v_struct test;

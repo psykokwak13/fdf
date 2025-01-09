@@ -6,7 +6,7 @@
 /*   By: egatien <egatien@student.42lehavre.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 18:40:06 by egatien           #+#    #+#             */
-/*   Updated: 2025/01/08 13:12:11 by egatien          ###   ########.fr       */
+/*   Updated: 2025/01/09 10:05:05 by egatien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,42 +40,47 @@ int	fdf(char *filepath)
 	p_struct	param;
 	m_point		*matpoint;
 	char		**line;
-	int			numberline;
+	int			fd;
 	m_point		*secondmatpoint;
 	
-	numberline = countline(filepath);
+	fd = 42;
 	param_init(&param);
 	mlx_key_hook(param.win,key_hook,&param);
 	mlx_expose_hook(param.win,key_hook,&param);
 	mlx_hook(param.win, 17, 0, closewindow, &param);
-	line = parse(filepath);
+	line = parse(filepath, &param, &fd);
+	secondmatpoint = NULL;
+	while (line != NULL && fd != 0)
+	{
 	matpoint = ft_putfdf(line);
 	free_all(line);
-	while (numberline > 1)
-	{
-	line = parse(filepath);
-	secondmatpoint = ft_putfdf(line);
-	traceline(secondmatpoint, param);
-	if (matpoint)
-	{
+	if (matpoint != NULL)
 		traceline(matpoint, param);
-		tracevertical(matpoint, secondmatpoint, param);
-		free_points(matpoint);
-	}
-	free_all(line);
-	numberline--;
-	if (numberline > 1)
+	if (secondmatpoint != NULL)
 	{
-	line = parse(filepath);
-	matpoint = ft_putfdf(line);
-	traceline(matpoint, param);
-	tracevertical(matpoint, secondmatpoint, param);
-	free_points(matpoint);
-	free_all(line);
+		tracevertical(matpoint, secondmatpoint, param);
+		free_points(secondmatpoint);
+		secondmatpoint = NULL;
 	}
-	free_points(secondmatpoint);
-	numberline--;
+	line = parse(filepath, &param, &fd);
+	if (line != NULL)
+	{
+		secondmatpoint = ft_putfdf(line);
+		free_all(line);
 	}
+	if (secondmatpoint != NULL)
+		traceline(secondmatpoint, param);
+	if (secondmatpoint != NULL)
+		tracevertical(matpoint, secondmatpoint, param);
+	if (matpoint != NULL)
+	{
+		free_points(matpoint);
+		matpoint = NULL;
+	}
+	line = parse(filepath, &param, &fd);
+	}
+	if (secondmatpoint)
+		free_points(secondmatpoint);
 	mlx_loop(param.mlx);
 	return (1);
 }

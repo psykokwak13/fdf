@@ -3,16 +3,20 @@
 void free_all(char **test)
 {
 	int		i;
-
+	char	**str;
+	
 	i = 0;
-	if (test == NULL)
+	str = test;
+	if (str == NULL)
 		return;
-	while (test[i] != NULL)
+	while (str[i] != NULL)
 	{
-	free(test[i]);
+	free(str[i]);
+	str[i] = NULL;
 	i++;
 	}
-	free(test);
+	if (str)
+		free(str);
 }
 int	matlen(char **str)
 {
@@ -47,25 +51,23 @@ m_point	*ft_putfdf(char **line)
 	int				countcols;
 	static int		y;
 	countcols = matlen(line);
-	x = 300;
+	x = 700;
 	i = 0;
-	if (y > 0) 
-		y += 50;
-	if (y == 0)
-		y += 50;
+	if (y >= 0) 
+		y += 20;
+
 	matrix = newpoint(x, y, parsenbr(line[i]));
 	i++;
-	x += 20;
 	if (!matrix)
 		return (NULL);
 	if (countcols <= 1)
 		return (matrix);  
 	while (i < countcols)
 	{
+		x += 20;
 		m_point *new_point = newpoint(x, y, parsenbr(line[i]));
 		matrix = add_point_to_list(matrix, new_point);
 		i++;
-		x += 20;
 	}
 	return (matrix);  // retourne la liste chaînée complète
 }

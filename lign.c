@@ -11,7 +11,7 @@ void ligne(m_point pointA, m_point pointB, void *win, void *mlx)
 
     while (1)
     {
-        mlx_pixel_put(mlx, win, pointA.x, pointA.y, 0x3498DB);  // Place un pixel à la position (x, y)
+        mlx_pixel_put(mlx, win, pointA.x, pointA.y, 0x98FF98);  // Place un pixel à la position (x, y)
 
         // Si le point actuel est le point B, on arrête
         if (pointA.x == pointB.x && pointA.y == pointB.y)
@@ -78,10 +78,14 @@ void tracevertical(m_point *matpoint, m_point *secondmatpoint, p_struct param)
 
 
     countcols = ft_lstsizempoint(matpoint);
-    printf("\n-%d-\n",countcols);
-    matpointtemp = matpoint;
-    secondmatpointtemp = secondmatpoint;
-    while (countcols > 0)
+    if (matpoint && secondmatpoint)
+    {
+        matpointtemp = matpoint;
+        secondmatpointtemp = secondmatpoint;
+    }
+    else
+        return ;
+    while (countcols > 0 && (matpointtemp && secondmatpointtemp))
     {
         ligne(*matpointtemp, *secondmatpointtemp, param.win, param.mlx);
         matpointtemp = matpointtemp->next;

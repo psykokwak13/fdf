@@ -43,29 +43,28 @@ v_struct	parsenbr(char *charnbr)
 			valuestruct.color = hex_to_int(charnbr);
 		i++;
 	}
-	valuestruct.z_value = ft_atoi(charnbr) * 4;
+	valuestruct.z_value = ft_atoi(charnbr) * 10;
 	return (valuestruct);
 }
-char	**parse (char *file_path)
+char	**parse (char *file_path, p_struct *param, int *fd)
 {
-	static int	fd;
 	char	**number;
 	char *datafile;
 
-	if (fd == 0)
-		fd = open(file_path, O_RDONLY);
-	if (fd == -1)
+	if (*fd == 42)
+		*fd = open(file_path, O_RDONLY);
+	if (*fd == -1)
 		{
-			exit(0);
+			close(*fd);
+			closewindow(param);
 		}
-	datafile = get_next_line(fd);
-	if (datafile == NULL)
+	datafile = get_next_line(*fd);
+	number = NULL;
+	if (datafile)
 	{
-		perror("error in parse, probably in get_next_line");
-		exit(0);
-	}
 	number = ft_split(datafile,' ');
 	free(datafile);
+	}
 	return (number);
 }
 
